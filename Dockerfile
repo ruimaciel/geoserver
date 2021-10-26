@@ -2,7 +2,7 @@ FROM alpine:3.10 AS build-stage
 
 WORKDIR /build
 
-ARG GEOSERVER_VERSION=2.16.0
+ARG GEOSERVER_VERSION=2.19.2
 
 ARG GEOSERVER_WAR_ZIP_NAME=geoserver-${GEOSERVER_VERSION}-war.zip
 
@@ -10,9 +10,8 @@ RUN wget https://sourceforge.net/projects/geoserver/files/GeoServer/${GEOSERVER_
 RUN unzip ${GEOSERVER_WAR_ZIP_NAME}
 
 
-FROM tomcat:8.5.47
+FROM tomcat:8.5.72
 
-ARG GEOSERVER_VERSION=2.16.0
 ENV GEOSERVER_VERSION=${GEOSERVER_VERSION}
 ENV DOCKER_IMAGE_VERSION=${GEOSERVER_VERSION}
 
@@ -25,3 +24,5 @@ LABEL org.label-schema.docker.cmd="docker run -d -p 8080:8080 geoserver:${DOCKER
 
 WORKDIR /usr/local/tomcat
 COPY --from=build-stage /build/geoserver.war ${CATALINA_HOME}/webapps
+
+EXPOSE 8080
